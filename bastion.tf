@@ -25,5 +25,5 @@ resource "aws_instance" "bastion_2" {
 
 resource "aws_key_pair" "redes_key" {
   key_name   = "redes_key"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file(local.key_file)
 }
