@@ -1,37 +1,37 @@
 resource "aws_lb" "web" {
-    name               = "web"
-    internal           = false
-    load_balancer_type = "application"
-    security_groups    = [aws_security_group.web_lb.id]
-    # subnets            = [for subnet in aws_subnet.public : subnet.id]
+  name               = "web"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.web_lb.id]
+  # subnets            = [for subnet in aws_subnet.public : subnet.id]
 
-    enable_deletion_protection = false
+  enable_deletion_protection = false
 
-    subnet_mapping {
-        subnet_id            = aws_subnet.public_1.id
-    }
+  subnet_mapping {
+    subnet_id = aws_subnet.public_1.id
+  }
 
-    subnet_mapping {
-        subnet_id            = aws_subnet.public_2.id
-    }
+  subnet_mapping {
+    subnet_id = aws_subnet.public_2.id
+  }
 
-#   access_logs {
-#     bucket  = aws_s3_bucket.lb_logs.bucket
-#     prefix  = "test-lb"
-#     enabled = true
-#   }
+  #   access_logs {
+  #     bucket  = aws_s3_bucket.lb_logs.bucket
+  #     prefix  = "test-lb"
+  #     enabled = true
+  #   }
 
-#   tags = {
-#     Environment = "production"
-#   }
+  #   tags = {
+  #     Environment = "production"
+  #   }
 }
 
 resource "aws_lb_listener" "web" {
   load_balancer_arn = aws_lb.web.arn
   port              = "80"
   protocol          = "HTTP"
-#   ssl_policy        = "ELBSecurityPolicy-2016-08"
-#   certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
+  #   ssl_policy        = "ELBSecurityPolicy-2016-08"
+  #   certificate_arn   = "arn:aws:iam::187416307283:server-certificate/test_cert_rab3wuqwgja25ct3n4jdj2tzu4"
 
   default_action {
     type             = "forward"

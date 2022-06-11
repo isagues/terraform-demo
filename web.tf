@@ -3,39 +3,29 @@ data "template_file" "web_server_ud" {
 }
 
 resource "aws_instance" "web_server_1" {
-    ami                   = "ami-0022f774911c1d690"
-    instance_type         = "t2.micro"
-    key_name              = "redes_key"
-    subnet_id             = aws_subnet.private_1.id
-    user_data             = data.template_file.web_server_ud.rendered
-    security_groups       = [aws_security_group.web.id]
-  
-    provisioner "file" {
-        source      = "scripts/api.conf"
-        destination = "/etc/nginx/conf.d/api.conf"
-    }
+  ami                       = "ami-0022f774911c1d690"
+  instance_type             = "t2.micro"
+  key_name                  = "redes_key"
+  subnet_id                 = aws_subnet.private_1.id
+  user_data                 = data.template_file.web_server_ud.rendered
+  vpc_security_group_ids    = [aws_security_group.web.id]
 
-    tags = {
-        Name = "web_server_1"
-    }
+  tags = {
+    Name = "web_server_1"
+  }
 }
 
 resource "aws_instance" "web_server_2" {
-    ami                     = "ami-0022f774911c1d690"
-    instance_type           = "t2.micro"
-    key_name                = "redes_key"
-    subnet_id               = aws_subnet.private_2.id
-    user_data               = data.template_file.web_server_ud.rendered
-    security_groups         = [aws_security_group.web.id]
-    
-    provisioner "file" {
-        source      = "scripts/api.conf"
-        destination = "/etc/nginx/conf.d/api.conf"
-    }
+  ami                       = "ami-0022f774911c1d690"
+  instance_type             = "t2.micro"
+  key_name                  = "redes_key"
+  subnet_id                 = aws_subnet.private_2.id
+  user_data                 = data.template_file.web_server_ud.rendered
+  vpc_security_group_ids    = [aws_security_group.web.id]
 
-    tags = {
-        Name = "web_server_2"
-    }
+  tags = {
+    Name = "web_server_2"
+  }
 }
 
 # resource "aws_instance" "web1" {

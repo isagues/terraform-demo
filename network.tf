@@ -12,9 +12,9 @@ resource "aws_route_table" "public_rt" {
 
 # Agrego rutas
 resource "aws_route" "public_rt_ig" {
-  route_table_id            = aws_route_table.public_rt.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_internet_gateway.igw.id
+  route_table_id         = aws_route_table.public_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.igw.id
 }
 
 # La bindeo a la subnet
@@ -42,9 +42,9 @@ resource "aws_route_table" "private_1_rt" {
 }
 
 resource "aws_route" "private_1_rt_natgw" {
-  route_table_id            = aws_route_table.private_1_rt.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_nat_gateway.natgw_1.id
+  route_table_id         = aws_route_table.private_1_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.natgw_1.id
 }
 
 resource "aws_route_table_association" "private_1_rt_assoc" {
@@ -61,9 +61,9 @@ resource "aws_route_table" "private_2_rt" {
 }
 
 resource "aws_route" "private_2_rt_natgw" {
-  route_table_id            = aws_route_table.private_2_rt.id
-  destination_cidr_block    = "0.0.0.0/0"
-  gateway_id                = aws_nat_gateway.natgw_2.id
+  route_table_id         = aws_route_table.private_2_rt.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.natgw_2.id
 }
 
 resource "aws_route_table_association" "private_2_rt_assoc" {
