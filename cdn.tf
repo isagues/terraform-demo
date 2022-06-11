@@ -19,7 +19,6 @@ data "aws_cloudfront_cache_policy" "optimized" {
 
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
-  
   # Si se usa www hay problemas de permisos, la policy dice que solo cloudfront lee pega a site
   origin {
     domain_name = aws_s3_bucket.site.bucket_regional_domain_name
@@ -35,15 +34,14 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     origin_id   = local.api_origin_id
 
     custom_origin_config {
-        origin_protocol_policy = "http-only"
+        origin_protocol_policy = "https-only"
         origin_ssl_protocols = ["TLSv1.2"]
-        http_port = 80
         https_port = 443
     }
   }
 
   enabled             = true
-  is_ipv6_enabled     = true
+  is_ipv6_enabled     = false
   comment             = "cloudfront"
   default_root_object = "index.html"
 
@@ -63,7 +61,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     target_origin_id = local.s3_origin_id
     cache_policy_id  = data.aws_cloudfront_cache_policy.optimized.id
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
@@ -81,9 +79,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     default_ttl            = 86400
     max_ttl                = 31536000
     compress               = true
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
   }
-
 
   price_class = "PriceClass_200"
 
