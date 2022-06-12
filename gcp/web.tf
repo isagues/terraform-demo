@@ -22,8 +22,12 @@ resource "google_compute_region_instance_group_manager" "web" {
   }
 }
 
+resource "google_compute_address" "static" {
+  name = "ipv4-address"
+}
+
 resource "google_compute_instance_template" "web" {
-  name        = "web-template"
+  name                 = "web-template"
 
   machine_type         = "e2-micro"
   can_ip_forward       = false
@@ -40,6 +44,8 @@ resource "google_compute_instance_template" "web" {
   network_interface {
     network = google_compute_network.vpc_network.id
     subnetwork = google_compute_subnetwork.subnet-priv-1.id
+    access_config {
+    }
   }
 
   metadata_startup_script = "${file("scripts/web_server_init_script.sh")}"
