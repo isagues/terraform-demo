@@ -1,9 +1,9 @@
 # Output variable definitions
 
-# output "arn" {
-#   description = "ARN of the bucket"
-#   value       = aws_s3_bucket.s3_bucket.arn
-# }
+output "domain_name" {
+  description = "buckeet domain name"
+  value       = aws_s3_bucket.site.bucket_regional_domain_name
+}
 
 # output "name" {
 #   description = "Name (id) of the bucket"

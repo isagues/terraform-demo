@@ -6,3 +6,5 @@ instance_type       = "t2.micro"
 cidr_block          = "10.0.0.0/16"
 zones_count         = 3
 web_server_ud_path  = "scripts/web_server_user_data.sh"
+secret              = "MY SECRET"
+domain_names        = []
