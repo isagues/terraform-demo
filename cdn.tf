@@ -46,7 +46,7 @@ resource "aws_cloudfront_distribution" "redes" {
   is_ipv6_enabled     = false
   comment             = "cloudfront"
   default_root_object = "index.html"
-  aliases = ["${local.redes_sub_domain}.${local.base_domain}"]
+  aliases = ["www.${local.demo_domain}", "${local.demo_domain}", "${local.demo_aws_domain}"]
 
   # Configure logging here if required 	
   # logging_config {
@@ -96,7 +96,7 @@ resource "aws_cloudfront_distribution" "redes" {
   }
 
   viewer_certificate {
-    acm_certificate_arn       = data.aws_acm_certificate.redes.arn
+    acm_certificate_arn       = aws_acm_certificate.redes.arn
     minimum_protocol_version  = "TLSv1.2_2021"
     ssl_support_method = "sni-only"
   }
