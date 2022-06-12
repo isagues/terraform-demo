@@ -18,7 +18,8 @@ data "aws_cloudfront_cache_policy" "optimized" {
 }
 
 
-resource "aws_cloudfront_distribution" "s3_distribution" {
+resource "aws_cloudfront_distribution" "redes" {
+  
   # Si se usa www hay problemas de permisos, la policy dice que solo cloudfront lee pega a site
   origin {
     domain_name = aws_s3_bucket.site.bucket_regional_domain_name
@@ -34,9 +35,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     origin_id   = local.api_origin_id
 
     custom_origin_config {
-        origin_protocol_policy = "https-only"
+        origin_protocol_policy = "http-only"
         origin_ssl_protocols = ["TLSv1.2"]
         https_port = 443
+        http_port = 80
     }
   }
 
@@ -44,17 +46,14 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   is_ipv6_enabled     = false
   comment             = "cloudfront"
   default_root_object = "index.html"
+  aliases = ["${local.redes_sub_domain}.${local.base_domain}"]
 
   # Configure logging here if required 	
-  #logging_config {
+  # logging_config {
   #  include_cookies = false
-  #  bucket          = "mylogs.s3.amazonaws.com"
-  #  prefix          = "myprefix"
-  #}
-
-  # If you have domain configured use it here 
-  #aliases = ["mywebsite.example.com", "s3-static-web-dev.example.com"]
-
+  #  bucket          = aws_s3_bucket.cdnlogs.id
+  # #  prefix          = "myprefix"
+  # }
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods   = ["GET", "HEAD"]
@@ -97,13 +96,15 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn       = data.aws_acm_certificate.redes.arn
+    minimum_protocol_version  = "TLSv1.2_2021"
+    ssl_support_method = "sni-only"
   }
 }
 
 # # to get the Cloud front URL if doamin/alias is not configured
 # output "cloudfront_domain_name" {
-#   value = aws_cloudfront_distribution.s3_distribution.domain_name
+#   value = aws_cloudfront_distribution.redes.domain_name
 # }
 
 data "aws_iam_policy_document" "site" {
