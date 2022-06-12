@@ -14,6 +14,9 @@ resource "google_compute_global_address" "default" {
 
 data "google_compute_global_address" "default" {
   name = "static-ip"
+  depends_on = [
+    google_compute_global_address.default
+  ]
 }
 
 resource "google_compute_target_http_proxy" "default" {

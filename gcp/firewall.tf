@@ -1,26 +1,5 @@
-# resource "google_compute_firewall" "web" {
-#   name    = "web-fw-allow-ssh-http"
-#   network = google_compute_network.vpc_network.name
-
-#   allow {
-#     protocol = "icmp"
-#   }
-
-#   allow {
-#     protocol = "tcp"
-#     ports    = ["80", "22"]
-#   }
-
-#   direction = "INGRESS"
-
-#   source_ranges = ["${data.google_compute_global_address.default.address}/32"]
-
-#   target_tags = ["web-server"]
-# }
-
-
-resource "google_compute_firewall" "web" {
-  name    = "web-fw-allowall-ssh-http"
+resource "google_compute_firewall" "weblb" {
+  name    = "web-fw-lb-allow-ssh-http"
   network = google_compute_network.vpc_network.name
 
   allow {
@@ -34,9 +13,10 @@ resource "google_compute_firewall" "web" {
 
   direction = "INGRESS"
 
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["${data.google_compute_global_address.default.address}/32"]
 
   target_tags = ["web-server"]
+ 
 }
 
 resource "google_compute_firewall" "allowhc" {
