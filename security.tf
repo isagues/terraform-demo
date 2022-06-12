@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "bastion_in_ssh" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = [local.my_ip]
+  cidr_blocks       = local.my_ips
   security_group_id = aws_security_group.bastion.id
 }
 
@@ -130,10 +130,10 @@ resource "aws_security_group_rule" "web_lb_in_ssh" {
   security_group_id = aws_security_group.web_lb.id
 }
 
-resource "aws_security_group_rule" "web_lb_in_https" {
+resource "aws_security_group_rule" "web_lb_in_http" {
   type              = "ingress"
-  from_port         = 443
-  to_port           = 443
+  from_port         = 80
+  to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.web_lb.id
