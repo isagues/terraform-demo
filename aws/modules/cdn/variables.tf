@@ -20,11 +20,11 @@ variable "bucket_domain_name" {
   type        = string
 }
 
-variable "domain_names" {
+variable "aliases" {
   type        = set(string)
 }
 
 variable "certificate_arn" {
   type        = string
-  default     = ""
+  # default     = null
 }
