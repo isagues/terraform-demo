@@ -12,7 +12,6 @@ data "aws_cloudfront_cache_policy" "optimized" {
 # }
 
 resource "aws_cloudfront_distribution" "redes" {
-  
   # Si se usa www hay problemas de permisos, la policy dice que solo cloudfront lee pega a site
   origin {
     domain_name = var.bucket_domain_name
@@ -40,7 +39,7 @@ resource "aws_cloudfront_distribution" "redes" {
   is_ipv6_enabled     = false
   comment             = "cdn"
   default_root_object = "index.html"
-  aliases = var.domain_names
+  aliases             = var.aliases
 
   # Configure logging here if required 	
   # logging_config {
@@ -84,10 +83,10 @@ resource "aws_cloudfront_distribution" "redes" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = length(var.domain_names) == 0
+    cloudfront_default_certificate = length(var.aliases) == 0
 
     acm_certificate_arn       = var.certificate_arn
-    minimum_protocol_version  = length(var.domain_names) > 0 ? "TLSv1.2_2021" : null
-    ssl_support_method        = length(var.domain_names) > 0 ? "sni-only" : null
+    minimum_protocol_version  = length(var.aliases) > 0 ? "TLSv1.2_2021" : null
+    ssl_support_method        = length(var.aliases) > 0 ? "sni-only" : null
   }
 }
