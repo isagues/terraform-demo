@@ -1,9 +1,9 @@
 # Output variable definitions
 
-output "domain_name" {
-  description = "Domain Name of the public load balanceer"
-  value       = aws_lb.web.dns_name
-}
+# output "arn" {
+#   description = "ARN of the bucket"
+#   value       = aws_s3_bucket.s3_bucket.arn
+# }
 
 # output "name" {
 #   description = "Name (id) of the bucket"

@@ -23,6 +23,7 @@ variable "public_subnets" {
 variable "user_data" {
   description = "User data for web server inizialization"
   type        = string
+  # sensitive   = true
 }
 
 variable "ami" {
