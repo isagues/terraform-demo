@@ -12,6 +12,10 @@ resource "google_compute_global_address" "default" {
   name     = "static-ip"
 }
 
+data "google_compute_global_address" "default" {
+  name = "static-ip"
+}
+
 resource "google_compute_target_http_proxy" "default" {
   name     = "lb-target-http-proxy"
   provider = google
@@ -21,7 +25,7 @@ resource "google_compute_target_http_proxy" "default" {
 resource "google_compute_url_map" "default" {
   name            = "lb-url-map"
   provider        = google
-  default_service = google_compute_backend_bucket.ice_cream_bucket.id
+  default_service = google_compute_backend_bucket.ice-cream-bucket.id
 
   host_rule {
     hosts        = ["*"]
@@ -30,7 +34,7 @@ resource "google_compute_url_map" "default" {
 
   path_matcher {
     name            = "allpaths"
-    default_service = google_compute_backend_bucket.ice_cream_bucket.id
+    default_service = google_compute_backend_bucket.ice-cream-bucket.id
 
     path_rule {
       paths   = ["/api","/api/*"]
@@ -39,7 +43,7 @@ resource "google_compute_url_map" "default" {
 
     path_rule {
       paths   = ["/bucket", "/bucket/*"]
-      service = google_compute_backend_bucket.ice_cream_bucket.id
+      service = google_compute_backend_bucket.ice-cream-bucket.id
     }
   }
 }
@@ -61,10 +65,10 @@ resource "google_compute_backend_service" "backend" {
   }
 }
 
-resource "google_compute_backend_bucket" "ice_cream_bucket" {
+resource "google_compute_backend_bucket" "ice-cream-bucket" {
   name = "ice-cream-backend-bucket"
 
-  bucket_name = google_storage_bucket.static-site.id
+  bucket_name = google_storage_bucket.ice-cream-bucket.id
   enable_cdn  = true
 }
 

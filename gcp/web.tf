@@ -10,20 +10,10 @@ resource "google_compute_region_instance_group_manager" "web" {
   }
   
   target_size  = 2
-
-  named_port {
-    name = "custom"
-    port = 8888
-  }
-
   auto_healing_policies {
     health_check      = google_compute_health_check.tcp-health-check.id
     initial_delay_sec = 300
   }
-}
-
-resource "google_compute_address" "static" {
-  name = "ipv4-address"
 }
 
 resource "google_compute_instance_template" "web" {
@@ -32,7 +22,7 @@ resource "google_compute_instance_template" "web" {
   machine_type         = "e2-micro"
   can_ip_forward       = false
 
-  tags                 = ["web-server"]
+  tags                 = ["web-server", "allow-hc"]
 
   // Create a new boot disk from an image
  disk {
