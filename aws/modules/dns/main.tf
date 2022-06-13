@@ -14,19 +14,29 @@ resource "aws_route53_record" "www" {
   }
 }
 
-resource "aws_route53_record" "aws" {
+resource "aws_route53_record" "primary" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = "${local.pri_app_domain}"
   type    = "A"
 
   alias {
-    name    = var.cloudfront_distribution.domain_name
-    zone_id = var.cloudfront_distribution.hosted_zone_id
+    name    = var.pri_deploy_cloudfront.domain_name
+    zone_id = var.pri_deploy_cloudfront.hosted_zone_id
     evaluate_target_health = false
   }
 }
 
-  # TODO(tobi): Falta NS de GCP
+resource "aws_route53_record" "secondary" {
+  zone_id = data.aws_route53_zone.main.zone_id
+  name    = "${local.sec_app_domain}"
+  type    = "NS"
+
+
+  allow_overwrite = true
+  ttl             = 300
+
+  records = var.sec_deploy_name_servers
+}
 
 resource "aws_route53_health_check" "web" {
   port              = 443

@@ -28,8 +28,13 @@ variable "app_primary_health_check_path" {
   default     = "/api/time"
 }
 
-variable "cloudfront_distribution" {
+variable "pri_deploy_cloudfront" {
   description = "The cloudfront distribution for the primary deployment"
+}
+
+variable "sec_deploy_name_servers" {
+  description = "Secondary deployment DNS Hosted zone name servers"
+  type = list(string)
 }
 
 

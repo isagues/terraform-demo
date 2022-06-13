@@ -4,7 +4,7 @@ locals {
   gcp_project       = "redes-demo-2022-353122"
   gcp_region        = "us-east1"
   bucket_region     = "US-EAST1"
-  ss_src            = "../ice-cream"
+  ss_src            = "ice-cream"
   gcp_default_zone  = "us-east1-a"
-  user_entry        = "user:tbrandy@itba.edu.ar"
+  gcp_user        = "user:tbrandy@itba.edu.ar"
 }

@@ -3,7 +3,7 @@ resource "google_project_iam_binding" "computeadmin" {
   role    = "roles/compute.admin"
 
   members = [
-      local.user_entry,
+      local.gcp_user,
     ]
 }
 
@@ -12,7 +12,7 @@ resource "google_project_iam_binding" "bucketadmin" {
   role    = "roles/storage.admin"
 
   members = [
-      local.user_entry,
+      local.gcp_user,
     ]
 }
 resource "google_storage_bucket_iam_binding" "bucketViewer" {

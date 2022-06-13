@@ -31,7 +31,7 @@ resource "google_compute_url_map" "default" {
   default_service = google_compute_backend_bucket.ice-cream-bucket.id
 
   host_rule {
-    hosts        = ["*"]
+    hosts        = ["*"] # TODO(tobi): Poner aca el host name
     path_matcher = "allpaths"
   }
 

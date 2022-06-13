@@ -1,4 +1,6 @@
 terraform {
+  required_version = "~> 1.2.0"
+
   backend "s3" {
     bucket = "state20220612210353297300000001"
     key    = "state"
@@ -6,6 +8,32 @@ terraform {
     encrypt = true
     kms_key_id = "709da914-a6a3-407d-bddb-50b5309189b5"
   }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.18.0"
+    }
+
+    google = {
+      source = "hashicorp/google"
+      version = "~> 4.24.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.aws_region
+}
+
+provider "google" {
+  project = local.gcp_project
+  region  = local.gcp_region
+  zone    = local.gcp_default_zone
+}
+
+module gcp {
+  source = "./gcp"
 }
 
 module "certificate" {
@@ -18,8 +46,9 @@ module "certificate" {
 module "vpc" {
     source = "./aws/modules/vpc"
 
-    cidr_block = var.cidr_block
+    cidr_block  = var.cidr_block
     zones_count = var.zones_count
+    natgw       = true
 }
 
 resource "aws_key_pair" "redes_key" {
@@ -68,26 +97,8 @@ resource "aws_cloudfront_origin_access_identity" "cdn" {
 module "static_site" {
   source = "./aws/modules/static_site"
 
-  src = "ice-cream"
+  src = var.ss_src
   bucket_access_OAI = [aws_cloudfront_origin_access_identity.cdn.iam_arn]
-}
-
-resource "aws_secretsmanager_secret" "example" {
-  name = "example"
-}
-
-resource "aws_secretsmanager_secret" "secret_example" {
-  name = "secret_example"
-}
-
-resource "aws_secretsmanager_secret_version" "example" {
-  secret_id     = aws_secretsmanager_secret.example.id
-  secret_string = "example-string-to-protect-"
-}
-
-resource "aws_secretsmanager_secret_version" "secret_example" {
-  secret_id     = aws_secretsmanager_secret.secret_example.id
-  secret_string = var.secret
 }
 
 module "cdn" {
@@ -110,6 +121,7 @@ module "dns" {
   primary_subdomain             = local.pri_app_deploy
   secondary_subdomain           = local.sec_app_deploy
   app_primary_health_check_path = "/api/time"
-  cloudfront_distribution       = module.cdn.cloudfront_distribution
+  pri_deploy_cloudfront         = module.cdn.cloudfront_distribution
+  sec_deploy_name_servers       = module.gcp.gcp_dns_name_servers
 }
 
