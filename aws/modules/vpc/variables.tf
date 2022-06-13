@@ -11,3 +11,9 @@ variable "zones_count" {
   type        = number
   default     = 3
 }
+
+variable "natgw" {
+  description = "Add one NAT GW to every private subnet"
+  type = bool
+  default = false
+}

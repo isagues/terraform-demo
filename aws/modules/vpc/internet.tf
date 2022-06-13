@@ -6,7 +6,7 @@ resource "aws_internet_gateway" "main" {
 }
 
 resource "aws_eip" "main_natgw" {
-  count = var.zones_count
+  count = var.natgw ? var.zones_count : 0
   vpc = true
 
   tags = {
@@ -15,7 +15,7 @@ resource "aws_eip" "main_natgw" {
 }
 
 resource "aws_nat_gateway" "main" {
-  count         = var.zones_count
+  count         = var.natgw ? var.zones_count : 0
   allocation_id = aws_eip.main_natgw[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
 
