@@ -41,7 +41,7 @@ resource "aws_route" "private_natgw" {
 }
 
 resource "aws_route_table_association" "private_rt_assoc" {
-  count           = var.natgw ? var.zones_count : 0
+  count           = var.zones_count
   subnet_id       = aws_subnet.private[count.index].id
   route_table_id  = aws_route_table.private[count.index].id
 }
