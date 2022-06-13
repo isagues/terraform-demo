@@ -2,11 +2,8 @@ terraform {
   required_version = "~> 1.2.0"
 
   backend "s3" {
-    bucket = "state20220612210353297300000001"
-    key    = "state"
-    region = "us-east-1"
+    key     = "state"
     encrypt = true
-    kms_key_id = "709da914-a6a3-407d-bddb-50b5309189b5"
   }
 
   required_providers {
@@ -27,33 +24,52 @@ provider "aws" {
 }
 
 provider "google" {
-  project = local.gcp_project
-  region  = local.gcp_region
+  project = var.gcp_project
+  region  = var.gcp_region
   zone    = local.gcp_default_zone
+}
+
+locals {
+  app_domain          = "${local.app_name}.${var.base_domain}"
+  pri_deploy_domain   = "${local.pri_app_deploy}.${var.base_domain}"
+  sec_deploy_domain   = "${local.sec_app_deploy}.${var.base_domain}"
+
+  s3_origin_id        = "ice-cream-static-site"
+  api_origin_id       = "nginx-api"
+
+  gcp_default_zone    = "${var.gcp_region}-a"
 }
 
 module gcp {
   source = "./gcp"
+
+  my_ips = var.my_ips
+  gcp_project       = var.gcp_project
+  gcp_region        = var.gcp_region
+  bucket_region     = upper(var.gcp_region)
+  ss_src            = local.static_resources
+  gcp_default_zone  = local.gcp_default_zone
+  gcp_user          = var.gcp_user
 }
 
 module "certificate" {
   source = "./aws/modules/certificate"
 
   base_domain   = var.base_domain
-  app_subdomain = var.app_name
+  app_subdomain = local.app_name
 }
 
 module "vpc" {
     source = "./aws/modules/vpc"
 
-    cidr_block  = var.cidr_block
-    zones_count = var.zones_count
+    cidr_block  = local.aws_vpc_network
+    zones_count = local.aws_az_count
     natgw       = true
 }
 
 resource "aws_key_pair" "redes_key" {
-  key_name   = var.key_name
-  public_key = file(var.key_path)
+  key_name   = local.ssh_key_name
+  public_key = file(var.ssh_key_path)
 }
 
 module "bastion" {
@@ -61,14 +77,14 @@ module "bastion" {
 
     vpc_id        = module.vpc.vpc_id
     subnets       = module.vpc.public_subnets_ids
-    key_name      = var.key_name
-    ami           = var.ami
+    key_name      = local.ssh_key_name
+    ami           = local.aws_ec2_ami
     my_ips        = var.my_ips
-    instance_type = var.instance_type
+    instance_type = local.aws_ec2_type
 }
 
 data "template_file" "web_server_ud" {
-  template = file(var.web_server_ud_path)
+  template = file(local.aws_ec2_web_user_data)
 }
 
 module "web_server" {
@@ -79,15 +95,10 @@ module "web_server" {
     private_subnets = module.vpc.private_subnets_ids
     public_subnets  = module.vpc.public_subnets_ids
     user_data       = data.template_file.web_server_ud.rendered
-    key_name        = var.key_name
-    ami             = var.ami
+    key_name        = local.ssh_key_name
+    ami             = local.aws_ec2_ami
     my_ips          = var.my_ips
-    instance_type   = var.instance_type
-}
-
-locals {
-  s3_origin_id = "ice-cream-static-site"
-  api_origin_id = "nginx-api"
+    instance_type   = local.aws_ec2_type
 }
 
 resource "aws_cloudfront_origin_access_identity" "cdn" {
@@ -97,7 +108,7 @@ resource "aws_cloudfront_origin_access_identity" "cdn" {
 module "static_site" {
   source = "./aws/modules/static_site"
 
-  src = var.ss_src
+  src               = local.static_resources
   bucket_access_OAI = [aws_cloudfront_origin_access_identity.cdn.iam_arn]
 }
 
@@ -117,7 +128,7 @@ module "dns" {
   source = "./aws/modules/dns"
 
   base_domain                   = var.base_domain
-  app_subdomain                 = var.app_name
+  app_subdomain                 = local.app_name
   primary_subdomain             = local.pri_app_deploy
   secondary_subdomain           = local.sec_app_deploy
   app_primary_health_check_path = "/api/time"

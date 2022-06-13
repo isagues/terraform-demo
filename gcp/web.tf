@@ -2,7 +2,7 @@ resource "google_compute_region_instance_group_manager" "web" {
   name = "web-manager"
 
   base_instance_name         = "web"
-  region                     = local.gcp_region
+  region                     = var.gcp_region
   distribution_policy_zones  = ["us-east1-b", "us-east1-c", "us-east1-d"] # TODO(tobi): Hacer dinamico
 
   version {

@@ -1,18 +1,18 @@
 resource "google_project_iam_binding" "computeadmin" {
-  project = local.gcp_project
+  project = var.gcp_project
   role    = "roles/compute.admin"
 
   members = [
-      local.gcp_user,
+      var.gcp_user,
     ]
 }
 
 resource "google_project_iam_binding" "bucketadmin" {
-  project = local.gcp_project
+  project = var.gcp_project
   role    = "roles/storage.admin"
 
   members = [
-      local.gcp_user,
+      var.gcp_user,
     ]
 }
 resource "google_storage_bucket_iam_binding" "bucketViewer" {

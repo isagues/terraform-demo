@@ -9,3 +9,8 @@ output "bucket" {
   description = "Bucket"
   value       = aws_s3_bucket.state.id
 }
+
+output "region" {
+  description = "State storage region"
+  value       = var.aws_region
+}

@@ -1,21 +1,32 @@
-variable key_name {}
-variable key_path {}
-variable ami {}
-variable my_ips {}
-variable instance_type {}
-variable cidr_block {}
-variable zones_count {}
-variable web_server_ud_path {}
-variable base_domain {type = string}
-variable app_name {type = string}
-variable ss_src           {type = string}
+variable ssh_key_path {
+  description = "SSH public key location needed to access aws instances"
+  type        = string
+}
 
-# AWS
-variable aws_region       {type = string}
+variable my_ips {
+  description = "Public IPs of the user. AWS EC2 access is restricted to those IPs."
+  type        = list(string)
+}
 
-# GCP
-variable gcp_project      {type = string}
-variable gcp_region       {type = string}
-variable bucket_region    {type = string}
-variable gcp_default_zone {type = string}
-variable gcp_user         {type = string}
+variable aws_region {
+  description = "AWS Region in which to deploy the application"
+  type = string
+  }
+
+variable base_domain {
+  description = "Base domain for the whole application. A subdomain of an already established domain."
+  type = string
+  }
+
+variable gcp_project {
+  description = "Name of the GCP project to use"
+  type = string
+}
+variable gcp_region {
+  description = "GCP Region in which to deploy the application"
+  type = string
+}
+variable gcp_user {
+  description = "GCP user for terraform to use. Probably the same used to authenticate on GCP."
+  type = string
+  }
