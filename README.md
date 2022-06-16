@@ -1,5 +1,11 @@
 # terraform-demo
 
+## Autores
+
+- [Brandy Tobias](https://github.com/tobiasbrandy)
+- [Pannunzio Faustino](https://github.com/Fpannunzio)
+- [Sagues Ignacio](https://github.com/isagues)
+
 ## Instructivo para deployar aplicación terraform
 
 ### 1. Terraform
@@ -22,7 +28,11 @@ Instalar [terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli
 4. Instalar la [gcloud CLI](https://cloud.google.com/sdk/docs/install) siguiendo la documentación oficial.
 5. Ejecutar `gcloud auth application-default login` y loguearse con su cuenta.
 
-### 4. Deployar Backend
+### 4. Clonar el proyecto
+
+Clonar el proyecto del [repositorio git](https://github.com/isagues/terraform-demo.git) y moverse a la carpeta del mismo. 
+
+### 5. Deployar Backend
 
 El backend es el sistema que tenemos para allmacenar el state de terraform generado. En este caso utilizaremos un S3 encriptado con una llave en KMS. Es por esto que antes de deployar nuestro proyecto tendremos que crear estos recursos.
 
@@ -35,7 +45,7 @@ El backend es el sistema que tenemos para allmacenar el state de terraform gener
 
 2. Ejecutar `init_backend.sh`. Se deberia crear el archivo de configuracion de backend `backend_config.tfvars`.
 
-### 5. Deployar Aplicacion
+### 6. Deployar Aplicacion
 
 1. En el archivo `config.tfvars` deberemos configurar los siguientes parametros:
     - `ssh_key_path`: Ubicacion de una clave pública neecsaria para acceder a las instancias EC2 en AWS mediante SSH.
@@ -48,7 +58,7 @@ El backend es el sistema que tenemos para allmacenar el state de terraform gener
 
   Se incluye un archivo de ejemplo para modificar.
 
-2. Ejecutar `terraform init -backend-config=backend_config.tfvars -auto-approve` para inicializar terraform.
+2. Ejecutar `terraform init -backend-config=backend_config.tfvars` para inicializar terraform.
 3. Ejecutar `terraform apply -var-file=config.tfvars -auto-approve` para empezar a deployar.
 
 Tener en cuenta que el proceso puede durar varios minutos, y que una vez finalizado puede tomar unos minutos hasta que el sitio se pueda acceder.
