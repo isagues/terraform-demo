@@ -1,4 +1,6 @@
-# terraform-demo
+# Infrastructure as Code con Terraform
+
+Prueba de concepto de Terraform en deploys multi cloud. Generacion de una arquitectura con instancias de computo replicadas y balanceadas, un sitio estatico, cdn y registro de dominios. Implementado con replicacion activo/pasivo entre AWS y GCP.
 
 ## Autores
 
@@ -34,7 +36,7 @@ Clonar el proyecto del [repositorio git](https://github.com/isagues/terraform-de
 
 ### 5. Deployar Backend
 
-El backend es el sistema que tenemos para allmacenar el state de terraform generado. En este caso utilizaremos un S3 encriptado con una llave en KMS. Es por esto que antes de deployar nuestro proyecto tendremos que crear estos recursos.
+El backend es el sistema que tenemos para almacenar el state de terraform generado. En este caso utilizaremos un S3 encriptado con una llave en KMS. Es por esto que antes de deployar nuestro proyecto tendremos que crear estos recursos.
 
 1. En el archivo `backend/config.tfvars` deberemos configurar los siguientes parametros:
     - `authorized_IAM_arn`: Lista con el arn de los usuarios IAM de AWS con los queremos poder ejecutar terraform. Por ejemplo, el que creamos previamente.
